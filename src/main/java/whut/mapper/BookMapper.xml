@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="whut.mapper.BookMapper">
+    <select id="showBooks" resultType="whut.bean.BookBean">
+        select * from books
+    </select>
+
+    <insert id="addBook">
+        insert into books (Name, Author, Publisher, Price, TotalCnt, Remain, Type, Img, Introduce)
+        values (#{Name}, #{Author}, #{Publisher}, #{Price}, #{TotalCnt}, #{Remain}, #{Type}, #{Img}, #{Introduce})
+    </insert>
+
+    <delete id="deleteBook" parameterType="Integer">
+        delete from books where Id = #{Id}
+    </delete>
+    
+    <select id="getBookBean" resultType="whut.bean.BookBean">
+        select *
+        from books
+        where Name = #{Name}
+        and Author = #{Author}
+        and Publisher = #{Publisher}
+    </select>
+
+    <update id="updateBook">
+        update books set
+            Name = #{Name},
+            Author = #{Author},
+            Publisher = #{Publisher},
+            Price = #{Price},
+            TotalCnt = #{TotalCnt},
+            Remain = #{Remain},
+            Type = #{Type},
+            Img = #{Img},
+            Introduce = #{Introduce}
+        where Id = #{Id}
+    </update>
+
+    <select id="queryBook" parameterType="whut.bean.BookBean" resultType="whut.bean.BookBean">
+        select * from books
+        <where>
+            <if test="Name != null">
+                and Name like CONCAT('%', #{Name}, '%')
+            </if>
+            <if test="Author != null">
+                and Author like CONCAT('%', #{Author}, '%')
+            </if>
+            <if test="Type != null">
+                and Type like CONCAT('%', #{Type}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="queryBookById" resultType="whut.bean.BookBean">
+        select * from books where Id = #{Id}
+    </select>
+
+    <update id="increaseBookCnt">
+        update books set Remain = Remain + 1 where Id = #{Id}
+    </update>
+
+    <update id="decreaseBookCnt">
+        update books set Remain = Remain - 1 where Id = #{Id}
+    </update>
+
+</mapper>

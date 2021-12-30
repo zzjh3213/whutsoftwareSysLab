@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="whut.mapper.BorrowMapper">
+    <insert id="addBorrow"  useGeneratedKeys="true" keyProperty="borrowId">
+        insert into borrow (Id, userName, startDate, expiryDate, returnDate)
+        values (#{Id}, #{userName}, #{startDate}, #{expiryDate}, #{returnDate})
+    </insert>
+    
+    <select id="queryBorrowInfo" parameterType="String" resultType="whut.bean.BorrowRes">
+        select
+               borrowId,
+               borrow.Id,
+               Name,
+               userName,
+               Author,
+               Publisher,
+               Type,
+               startDate,
+               expiryDate,
+               returnDate
+        from borrow, books
+        where borrow.Id = books.Id
+        <if test="userName != null">
+            and userName like CONCAT('%', #{userName}, '%')
+        </if>
+        <if test="Name != null">
+            and books.Name like CONCAT('%', #{Name},'%')
+        </if>
+        <if test="Type != null">
+            and books.Type like CONCAT('%', #{Type},'%')
+        </if>
+        <if test="isReturn != null">
+            <if test="isReturn != false">
+                and borrow.returnDate is not null
+            </if>
+            <if test="isReturn != true">
+                and borrow.returnDate is null
+            </if>
+        </if>
+    </select>
+
+    <update id="returnBook">
+        update borrow set
+            returnDate = #{returnDate}
+        where borrowId = #{borrowId}
+        and returnDate is null
+    </update>
+
+    <delete id="deleteBorrowInfo" parameterType="Integer">
+        delete from borrow where borrowId = #{borrowId} and returnDate is not null
+    </delete>
+
+    <select id="getBorrowBean" resultType="whut.bean.BorrowBean">
+        select * from borrow where borrowId = #{borrowId}
+    </select>
+
+    <select id="getExpiryBorrowBean" resultType="whut.bean.BorrowBean">
+        select *
+        from borrow
+        where userName = #{userName}
+        and returnDate is null
+        and to_days(now()) > to_days(expiryDate)
+    </select>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="whut.mapper.BookAdminMapper">
+    <select id="showAllAdmin" resultType="whut.bean.AdminBean">
+        select * from bookadmin
+    </select>
+
+    <insert id="addAdmin">
+        insert into bookadmin (userName, userPwd)
+        values (#{userName}, #{userPwd})
+    </insert>
+
+    <select id="getAdmin" parameterType="String" resultType="whut.bean.AdminBean">
+        select *
+        from bookadmin
+        where userName = #{userName}
+    </select>
+
+    <select id="queryAdmin" parameterType="String" resultType="whut.bean.AdminBean">
+        select *
+        from bookadmin
+        where userName like CONCAT('%', #{userName}, '%')
+    </select>
+
+    <delete id="deleteBookAdmin">
+        delete from bookadmin where userName = #{userName}
+    </delete>
+
+    <update id="updateBook">
+        update bookadmin
+        set userPwd = #{userPwd}
+        where userName = #{userName}
+    </update>
+
+</mapper>
+

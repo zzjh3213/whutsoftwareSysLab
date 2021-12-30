@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="whut.mapper.StudentMapper">
+    <insert id="addStudent">
+        insert into student (userName, studentName, userPwd, studentMajor)
+        values (#{userName}, #{studentName}, #{userPwd}, #{studentMajor});
+    </insert>
+
+    <select id="getStudent" resultType="whut.bean.StudentBean">
+        select *
+        from student
+        where userName = #{userName}
+    </select>
+
+    <select id="showAllStudents" resultType="whut.bean.StudentBean">
+        select *
+        from student
+    </select>
+    
+    <select id="queryStudent" resultType="whut.bean.StudentBean">
+        select *
+        from student
+        <where>
+            <if test="userName != null">
+                and userName like CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="studentName != null">
+                and studentName like CONCAT('%', #{studentName}, '%')
+            </if>
+            <if test="studentMajor != null">
+                and studentMajor like CONCAT('%', #{studentMajor}, '%')
+            </if>
+        </where>
+    </select>
+
+    <update id="updateStudent">
+        update student
+        <set>
+            <if test="studentName != null">
+                studentName = #{studentName},
+            </if>
+            <if test="studentMajor != null">
+                studentMajor = #{studentMajor},
+            </if>
+            <if test="userPwd != null">
+                userPwd = #{userPwd},
+            </if>
+            <if test="studentState != null">
+                studentState = #{studentState}
+            </if>
+        </set>
+        where userName = #{userName}
+    </update>
+
+    <delete id="deleteStudent">
+        delete from student where userName = #{userName}
+    </delete>
+
+    <select id="getState" resultType="Integer">
+        select studentState
+        from student
+        where userName = #{userName}
+    </select>
+
+    <update id="setStudentState">
+        update student set
+        studentState = #{studentState}
+        where userName = #{userName}
+    </update>
+
+    <update id="increaseBookCnt">
+        update student set
+            bookCnt = bookCnt + 1
+        where userName = #{userName}
+    </update>
+
+    <update id="decreaseBookCnt">
+        update student set
+            bookCnt = bookCnt - 1
+        where userName = #{userName}
+    </update>
+
+    <select id="getBookCnt" resultType="Integer">
+        select bookCnt from student where userName = #{userName}
+    </select>
+
+</mapper>
